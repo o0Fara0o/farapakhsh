@@ -1,0 +1,29 @@
+{
+    "platforms": {
+        "telegram": {
+            "enabled": true,
+            "sources": [],
+            "targets": [
+                "@farapakhsh_price"
+            ]
+        },
+        "eitaa": {
+            "enabled": false,
+            "sources": [],
+            "targets": []
+        },
+        "whatsapp": {
+            "enabled": false,
+            "sources": [],
+            "targets": []
+        },
+        "web": {
+            "enabled": false,
+            "urls": []
+        }
+    },
+    "settings": {
+        "check_interval_minutes": 60,
+        "ai_model": "gemini-2.0-flash"
+    }
+}
