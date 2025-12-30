@@ -2,9 +2,11 @@
     "platforms": {
         "telegram": {
             "enabled": true,
-            "sources": [],
+            "sources": [
+                "@warheadsland"
+            ],
             "targets": [
-                "@farapakhsh_price"
+                "@o0fara0otest"
             ]
         },
         "eitaa": {

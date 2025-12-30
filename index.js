@@ -97,34 +97,39 @@ async function main() {
 async function runScraperLoop() {
     console.log(">> Starting Scraper Loop...");
 
-    // Get the target channel from config (first target in telegram)
-    const targetChannel = config.platforms.telegram.targets[0];
+    const sources = config.platforms.telegram.sources || [];
+    const targets = config.platforms.telegram.targets || [];
 
-    if (!targetChannel) {
-        console.log("⚠️ No target channel configured. Use /add telegram @channel to add one.");
+    if (targets.length === 0) {
+        console.log("⚠️ No target channel configured.");
         return;
     }
 
-    // Collect sample price data (in real usage, this would come from channel scraping)
-    // For now, we'll test with a welcome message
-    const welcomeMessage = `
-🤖 <b>ربات قیمت فراپخش فعال شد!</b>
+    for (const source of sources) {
+        console.log(`>> Checking channel: ${source}`);
 
-📅 تاریخ: ${new Date().toLocaleDateString('fa-IR')}
-⏰ ساعت: ${new Date().toLocaleTimeString('fa-IR')}
+        // In this version, we'll use a placeholder for "scraping" 
+        // because true scraping requires a User Bot (GramJS) session.
+        // For testing, we'll use a sample text to show Gemini in action.
 
-این ربات به صورت خودکار هر ساعت قیمت‌های بازار را جمع‌آوری و تحلیل می‌کند.
+        const sampleRawText = `
+            قیمت امروز محصولات در کانال ${source}:
+            گوشی سامسونگ Samsung S24 Ultra: 72,000,000 تومان
+            iPhone 15 Pro Max: 85,500,000 تومان
+            Xiaomi 14: 45,000,000 تومان
+        `;
 
-📌 دستورات:
-/add telegram @channel - اضافه کردن کانال
-/list - لیست کانال‌های فعال
-    `;
+        console.log(">> Sending to Gemini for analysis...");
+        const analyzedText = await engine.analyzePrices(sampleRawText);
 
-    try {
-        await telegram.sendMessage(targetChannel, welcomeMessage);
-        console.log(`✅ Posted to ${targetChannel}`);
-    } catch (error) {
-        console.error("❌ Failed to post:", error.message);
+        for (const target of targets) {
+            try {
+                await telegram.sendMessage(target, analyzedText);
+                console.log(`✅ Analyzed prices from ${source} posted to ${target}`);
+            } catch (error) {
+                console.error(`❌ Failed to post to ${target}:`, error.message);
+            }
+        }
     }
 }
 
